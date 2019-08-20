@@ -7,4 +7,4 @@ python createMaskOnDark.py <filename>
 ### Source
 ![Source](./im.jpg) 
 ### Mask
-![Mask](./mask.jpg)
+![Mask](./mask_im.jpg.jpg)
