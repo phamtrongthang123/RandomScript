@@ -1,7 +1,6 @@
 from pathlib import Path
 from tabulate import tabulate
 import os
-from hurry.filesize import size
 import argparse
 parser = argparse.ArgumentParser(description='Only one argument is folder name!')
 parser.add_argument('-f','--folder', metavar='f', type=str,help='folder name')
@@ -55,6 +54,13 @@ def get_size(start_path = '.'):
 
     return total_size
 
+def sizeof_fmt(num, suffix='B'):
+    for unit in ['','K','M','G','T','P','E','Z']:
+        if abs(num) < 1024.0:
+            return "%3.1f%s%s" % (num, unit, suffix)
+        num /= 1024.0
+    return "%.2f%s%s" % (num, 'Yi', suffix)
+
 def size_with_color(s):
     return colors.bold + colors.fg.orange + s + colors.reset
 
@@ -63,7 +69,8 @@ def folder_with_color(f):
 
 def make_bold(s):
     return colors.bold + s + colors.reset
-print(make_bold("Folder size: "),size_with_color(size(get_size(folder_name))))
+print(make_bold("Folder size: "),size_with_color(sizeof_fmt(get_size(folder_name))))
+
 def listing_folder(folder_name, cur_depth):
     print("")
     print(make_bold("Child list of"), folder_with_color(str(folder_name)))
@@ -73,10 +80,10 @@ def listing_folder(folder_name, cur_depth):
         if f.is_dir():
             child_folder_s_file = [x for x in f.iterdir()]
             number_of_file = len(child_folder_s_file)
-            size_c = size_with_color(size(get_size(f)))
+            size_c = size_with_color(sizeof_fmt(get_size(f)))
             t.append([folder_with_color(str(f)),'folder', size_c, number_of_file])
         else:
-            t.append([f,'file', size_with_color(size(get_size(f)))])
+            t.append([f,'file', size_with_color(sizeof_fmt(get_size(f)))])
     t.sort(key=lambda x: x[1], reverse=True)
     print(tabulate(t, headers=[make_bold(x) for x in ['Name','Type', 'Size', 'Number of file (for folder)']]))
     # count from 1
