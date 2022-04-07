@@ -1,0 +1,1 @@
+This script is to crop the video given annotation segment (start, end, label)
